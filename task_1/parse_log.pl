@@ -9,8 +9,8 @@ use DBI;
 my $file_name = 'out';
 
 # значения для соединения с БД
-my $db_name = 'medweb';
-my $db_user = 'src';
+my $db_name = 'dbase';
+my $db_user = 'dbuser';
 my $db_password = '';
 
 # соединяемся с БД
