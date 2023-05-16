@@ -1,4 +1,4 @@
-# perl_test
+# Комментарии к решению
 
 Задача 1
 --------
@@ -10,6 +10,7 @@
 Такие строки записываются в третью таблицу **log_error** (см. task_1/db_objects.sql).
 
 
+
 Задача 2
 --------
 
@@ -19,28 +20,31 @@
 1. согласно исходным данным, в таблице **message** нет поля **"адрес получателя"**;
 2. по условиям заполнения таблиц, в таблицу **message** попадают только строки с флагом **<=**, которые содержат адрес ***отправителя***, а не ***получателя***.
 
-Чтобы решение было максимально приближенным к условиям задачи, я реализовал поиск только по полю **address** таблицы **log**.
+Чтобы решение максимально соответствовало условиям задачи, я реализовал поиск *только по полю* ***address*** *таблицы* ***log***.
 
 Если бы ключевым требованием был поиск по любым адресам (получателя и отправителя), то возможны следующие варианты решения:
 
-1. Расширить условия задачи: добавить поле **address** в таблицу **message** (плюс индекс для поиска по этому полю) и заполнять его значениями адреса отправителя из строк с флагом **<=**.
+1. Расширить условия задачи: добавить поле **address** в таблицу **message** (плюс индекс для поиска по этому полю) и заполнять его значениями адреса отправителя из строк с флагом **<=**. Тогда запрос для поиска по двум таблицам выглядел бы так:
 
-Тогда запрос для поиска по двум таблицам выглядел бы так:
-> select m.created, m.str
-> from (
->   select int_id, created, str from message where address ilike ?
->   union all
->   select int_id, created, str from log where address ilike ?
-> ) as m
-> order by m.int_id, m.created 
+```
+select m.created, m.str
+from (
+  select int_id, created, str from message where address ilike ?
+  union all
+  select int_id, created, str from log where address ilike ?
+) as m
+order by m.int_id, m.created 
+```
 
-2. Если не менять структуру таблиц, то можно было бы искать адрес отправителя или получателя и в поле **str** таблицы **message**, но тогда стало бы вероятно появление в результатах поиска нерелевантных записей, т.к. это поле содержит не только адреса:
+2. Если не менять структуру таблиц, то можно было бы искать адрес (отправителя или получателя) и в поле **str** таблицы **message**, но тогда стало бы вероятно появление в результатах поиска нерелевантных записей, т.к. это поле содержит не только адреса:
 
-> select m.created, m.str
-> from (
->   select int_id, created, str from message where ***str*** ilike ?
->   union all
->   select int_id, created, str from log where address ilike ?
-> ) as m
-> order by m.int_id, m.created 
+```sql=
+select m.created, m.str
+from (
+  select int_id, created, str from message where str ilike ?
+  union all
+  select int_id, created, str from log where address ilike ?
+) as m
+order by m.int_id, m.created
+```
 
