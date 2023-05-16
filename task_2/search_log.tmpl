@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Поиск по почтовому логу</title>
+  <link rel="stylesheet" href="search_log.css" type="text/css">
+</head>
+<body>
+  <div class="form">
+    <form method="post">
+      <label>
+        Адрес получателя:
+        <input type="text" name="address" value="{ADDRESS}" />
+      </label>
+      <input type="submit" name="submit" value="Искать" />
+    </form>
+  </div>
+
+  <div class="result">
+    {SEARCH_RESULT}
+  </div>
+
+  <div class="message">
+    {RESULT_MESSAGE}
+  </div>
+</body>
+</html>
